@@ -5,7 +5,6 @@ wb = load_workbook(filename = 'covid_kaggle_dataset.xlsx')
 sheet = wb.active
 
 rows = sheet.max_row
-print(rows)
 
 class Patient:
 	def __init__(self, id, data, dimensions):
@@ -58,9 +57,19 @@ def main():
 		data.append(sheet['S' + str(i)].value)	#Monocytes					9
 		data.append(sheet['AP' + str(i)].value)	#Proteina C reativa mg/dL	10
 		dimensions = [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ]
-		patients.append(Patient(id, data, dimensions))
+
+		valid_record = True
+		for feature in data:
+			if feature == None:
+				valid_record = False
+				break
+		
+		if valid_record:		
+			patients.append(Patient(id, data, dimensions))
 
 	tree.add_all(patients)
+
+	print(tree.size, ' records inserted')
 
 	while True:
 		print("Ingrese las dimensiones:")
